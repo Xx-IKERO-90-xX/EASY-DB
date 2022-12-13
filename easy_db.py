@@ -123,7 +123,6 @@ Para retroceder escriba 'return'.
                             {column1} VARCHAR(1000),
                             {column2} VARCHAR(1000)
                         );
-                        """)
                         mysql_cursor.execute(f"DESCRIBE {new_table};")
                         for x in mysql_cursor:
                             print(x)
