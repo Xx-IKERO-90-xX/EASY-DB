@@ -1,4 +1,6 @@
 import os
+import sys
+import time
 import mysql.connector
 
 tit = """
@@ -13,8 +15,9 @@ tit = """
 ||            ███████╗██║░░██║██████╔╝░░░██║░░░  ██████╔╝██████╦╝                ||
 ||            ╚══════╝╚═╝░░╚═╝╚═════╝░░░░╚═╝░░░  ╚═════╝░╚═════╝░                ||
 ||                                                                               ||
-||                                  V 1.0 (BETA)                                 ||    
+||                                  V 2.0 (BETA)                                 ||
 ||                                                                               ||
+||                           Creado por THE_IKERO90                              ||
 ||                                                                               ||
 ||-------------------------------------------------------------------------------||
 |---------------------------------------------------------------------------------|                    
@@ -23,13 +26,32 @@ tit = """
 os.system("clear")
 print(tit)
 server = input(" Servidor a user (localhost o un servidor en la nube) >> ")
-us = input("[+] Usuario >> ")
+user = input("[+] Usuario >> ")
 passwd = input("[+] Contraseña >> ")
 conexion = mysql.connector.connect(
     host=f"{server}",
-    user=f"{us}",
+    user=f"{user}",
     password=f"{passwd}"
 )
+
+# Barra de progreso
+def progreso(it, prefix="", size=60, file=sys.stdout):
+    count = len(it)
+    def show(j):
+        x = int(size*j/count)
+        file.write("%s[%s%s] %i/%i\r" % (prefix, "█"*x, "."*(size-x), j, count))
+        file.flush()
+        file.write("\n")
+    show(0)
+    for i, item in enumerate(it):
+        yield item
+        show(i+1)
+        file.write("\n")
+    file.flush()
+
+for i in progreso(range(15), "Conectando: ", 40):
+    time.sleep(0.1)
+        
 mysql_cursor = conexion.cursor()
 main = True
 while main:
@@ -70,183 +92,262 @@ while main:
             print(tit)
             print("""   
 -------------------------------
-| [1] Ver Tablas.             |
+| [1] Crear Tabla.            |
 |                             |
-| [2] Crear Tabla.            |
+| [2] Borrar Tabla.           |
 |                             |
-| [3] Borrar Tabla.           |
+| [3] Relaciones.             |
 |                             |
-| [4] Insertar/Eliminar datos.|
+| [4] Consultar Tablas.       |
 -------------------------------
             """)
             opt2 = input(f"[{database}]~$ ")
+                
+        # Opcion de Crear Tablas  
             if opt2 == "1":
-                mysql_cursor.execute("SHOW TABLES;")
-                for x in mysql_cursor:
-                    print(x)
-                a = input("[+] Presione ENTER para continuar >> ")
-                    
-            elif opt2 == "2":
-                new_table = input("[+] Escriba el nombre de la Nueva Tabla >> ")
-                sele1 = True
-                while sele1:
-                    os.system("clear")
-                    print(tit)
-                    activate = False
-                    print("""
---------------------------------------------------------------------
-| 1  columna | 2 columnas  |  3 columnas | 4 columnas | 5 columnas |
---------------------------------------------------------------------
-
-Para retroceder escriba 'return'.
-                    
-                    """)
-                    num = input("[+] >> ")
-                    if num == "1":
-                        column1 = input("[1] Primera columna >> ")
-                        mysql_cursor.execute(f"""
-                        CREATE TABLE {new_table} (
-                            {column1} VARCHAR(1000)
-                        );
-                        """)
-                        mysql_cursor.execute(f"DESCRIBE {new_table};")
-                        for x in mysql_cursor:
-                            print(x)
-                        print("[+] Tabla creadad!!!")
-                        a = input("[+] Presione ENTER para continuar >> ")
-                            
-                    elif num == "2":
-                        column1 = input("[1] Primera columna >> ")
-                        column2 = input("[2] Segunda columna >> ")
-                        mysql_cursor.execute(f"""
-                        CREATE TABLE {new_table} (
-                            {column1} VARCHAR(1000),
-                            {column2} VARCHAR(1000)
-                        );
-                        mysql_cursor.execute(f"DESCRIBE {new_table};")
-                        for x in mysql_cursor:
-                            print(x)
-                        print("Tabla Creada!!!")
-                        a = input("[+] Presione ENTER para continuar >> ")
-                            
-                    elif num == "3":
-                        column1 = input("[1] Primera columna >> ")
-                        column2 = input("[2] Segunda columna >> ")
-                        column3 = input("[3] Tercera columna >> ")
-                        mysql_cursor.execute(f"""
-                        CREATE TABLE {new_table} (
-                            {column1} VARCHAR(1000),
-                            {column2} VARCHAR(1000),
-                            {column3} VARCHAR(1000)
-                        );
-                        """)
-                        mysql_cursor.execute(f"DESCRIBE {new_table};")
-                        for x in mysql_cursor:
-                            print(x)
-                        a = input("[+] Presione ENTER para continuar >> ")
-                            
-                    elif num == "4":
-                        column1 = input("[1] Primera columna >> ")
-                        column2 = input("[2] Segunda columna >> ")        
-                        column3 = input("[3] Tercera columna >> ")
-                        column4 = input("[4] Cuarta columna >> ")
-                        mysql_cursor.execute(f"""
-                        CREATE TABLE {new_table} (
-                            {column1} VARCHAR(1000),
-                            {column2} VARCHAR(1000),
-                            {column3} VARCHAR(1000),
-                            {column4} VARCHAR(1000)
-                        );
-                        """)
-                        mysql_cursor.execute(f"DESCRIBE {new_table};")
-                        for x in mysql_cursor:
-                            print(x)
-                        print("Tabla creada !!!")
-                        a = input("[+] Presione ENTER para continuar >> ")
-                            
-                    elif num == "5":
-                        column1 = input("[1] Primera columna >> ")
-                        column2 = input("[2] Segunda columna >> ")
-                        column3 = input("[3] Tercera columna >> ")
-                        column4 = input("[4] Cuarta columna >> ")
-                        column5 = input("[5] Quinta columna >> ")
-                        mysql_cursor.execute(f"""
-                        CREATE TABLE {new_table} (
-                            {column1} VARCHAR(1000),
-                            {column2} VARCHAR(1000),
-                            {column3} VARCHAR(1000),
-                            {column4} VARCHAR(1000),
-                            {column5} VARCHAR(1000)
-                        );
-                        """)
-                        mysql_cursor.execute(f"DESCRIBE {new_table};")
-                        for x in mysql_cursor:
-                            print(x)
-                        print("Tabla creada!!!")
-                        a = input("[+] Presione ENTER para continuar >> ")
-                    
-                    elif num == "return":
-                        sele1 = False
-                        activate = True
-                    
-                    else:
-                        os.system("clear")
-                    
-            elif opt2 == "3":
-                table_del = input("[+] Seleccione la tabla a eliminar >> ")
-                mysql_cursor.execute(f"DROP TABLE {table_del};")
-                mysql_cursor.execute("SHOW TABLES;")
-                for x in mysql_cursor:
-                    print(x)
-                print("Tabla eliminado!!!")
-                a = input("[+] Presione ENTER para continuar >> ")
-                    
-            elif opt2 == "4":
                 os.system("clear")
                 print(tit)
-                table_sel = input("[+] Seleccione la tabla >> ")
-                activate3 = True
-                while activate3:
+                table = input("Nombre de la tabla: ")
+                pk = input ("[+] Clave primaria: ")
+                pk_date = input("[+] Tipo de dato para la Clave primaria: ")
+                mysql_cursor.execute(f"""
+                    CREATE TABLE {table} (       
+                    {pk} {pk_date}
+                    ); 
+                """)
+                mysql_cursor.execute(f"ALTER TABLE {table} ADD PRIMARY KEY ({pk});")
+
+                num = int(input("Numero de columnas (la pk no cuenta): "))
+                for r in range(num):
+                    name = input(f"[{r}] Nombre del registro: ")
+                    date = input(f"[{r}] Tipo de dato del Registro: ")
+                    allownull = input(f"[{r}] Habilitar campo vacío (allow o deny): ")
+                    if allownull == "allow":
+                        mysql_cursor.execute(f"ALTER TABLE {table} ADD COLUMN {name} {date};")
+                    elif allownull == "deny":
+                        mysql_cursor.execute(f"ALTER TABLE {table} ADD COLUMN {name} {date} NOT NULL;")
+        
+                mysql_cursor.execute(f"DESCRIBE {table};")
+                for x in mysql_cursor:
+                    print(x)
+                        
+            # Borrar Tablas       
+            elif opt2 == "2":
+                os.system("clear")
+                print(tit)
+                mysql_cursor.execute("SHOW TABLES;")
+                for x in mysql_cursor:
+                    print(x)
+                table_del = input(f"[{database}] Seleccione la tabla a eliminar >> ")
+                mysql_cursor.execute(f"DROP TABLE IF EXISTS {table_del};")
+                mysql_cursor.execute("SHOW TABLES;")
+                for x in mysql_cursor:
+                    print(x)
+                
+                print("[-] Tabla eliminado!!!")
+                a = input("[+] Presione ENTER para continuar >> ")
+            
+            # Crear Relaciones
+            elif opt2 == "3":
+                os.system("clear")
+                activate4 = True
+                while activate4:
                     activate = False
-                    os.system("clear")
                     print(tit)
                     print("""
-------------------------------------------------------------------------
-|               SELECCIONE UNA DE ESTAS OPCIONES                       |
-------------------------------------------------------------------------
-|         [ + ]  AÑADIR          |          [ - ]  ELIMINAR            |
-------------------------------------------------------------------------
+                          
+Si desea cancelar escriba 'cancel'
+-----------------------------------------------------------------------------------------------------------------
+                                [+] ESCOJA EL TIPO DE RELACIÓN A APLICAR: 
+-----------------------------------------------------------------------------------------------------------------
+                                         
+        1: REFLEXIVA                         2: BINARIA                                  3: TERNARIA
 
-Si desea volver escriba 'return'.
-                    """)
-                    opt4 = input(f"[{database}]~$ ")
-                    if opt4 == "+":
-                        print(" ")
-                        print("-------------------------------------------->")
-                        print(" ")
-                        columns = input("[+] Siguiendo la flecha valla escribiendo de la siguiente forma todos los nombres de cada columna (columna1, columna2, columna3) >> ")
-                        dates_add = input("[+] Siguiendo el orden de la flecha vallan introducioendo de la siguiente manera los datos a introducir ('dato1', 'dato2', 'dato3') >> ")
-                        mysql_cursor.execute(f"INSERT INTO {table_sel} ({columns}) VALUES ({dates_add});")
-                        mysql_cursor.execute(f"SELECT * FROM {table_sel};")
+        _____                  _____            /\            _____                    _____         _____
+       |_____| <---|          |_____|----------/__\----------|_____|                  |_____|       |_____|
+          |        |                                                                        \      /
+          |________|                                                                         \____/
+                                                                                              \  /
+                                                                                               \/
+                                                                                                |
+                                                                                                |
+                                                                                              _____
+                                                                                             |_____|
+
+-----------------------------------------------------------------------------------------------------------------
+                """)
+                    relation = int(input(f" [{database}] >> "))
+                    if relation == 1:
+                        mysql_cursor.execute("SHOW TABLES;")
                         for x in mysql_cursor:
                             print(x)
-                        a = input("[+] Presione ENTER para continuar >> ")
+                        table = input(f" [{database}] >> ")
+                        mysql_cursor.execute(f"DESCRIBE TABLE {table};")
+                        for x in mysql_cursor:
+                            print(x)
+                        primarykey = input(f" Clave Primaria de la Tabla >> ")
+                        refkey = input("[+] Nombre de la clave para la relación Reflexiva >> ")
+                        typedate = input("[+] Tipo de dato (INT, VARCHAR(num), CHAR(num), DECIMAR(num1,num2), etc. ): ")
+                        nullopt = input("[+] Habilitar null o no ('allow' o 'deny') >> ")
+                        if nullopt == "allow":
+                            mysql_cursor.execute(f"""
+                                ALTER TABLE {table} ADD COLUMN {refkey} {typedate};
+                            """)
+                            mysql_cursor.execute(f"""
+                                ALTER TABLE {table} 
+                                ADD FOREIGN KEY ({refkey}) REFERENCES {table}({primarykey})   
+                            """)
+                            print("[+] Creando Relacion: [ # . . . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # . . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # # . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # # # . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando relacion: [ # # # # # ]")
+                            time.sleep(0.2)
+                        
+                            print("[+] RELACION CREADA!!!")
                             
-                    elif opt4 == "-":
-                        mysql_cursor.execute(f"SELECT * FROM {table_sel};")
-                        for x in mysql_cursor:
-                            print(x)
-                        column = input("[-] Seleccione una columna >> ")
-                        date_del = input("[-] Escriba el dato a eliminar >> ")
-                        mysql_cursor.execute(f"DELETE FROM {table_sel} WHERE {column}={column};")
-                        mysql_cursor.execute(f"SELECT * FROM {table_sel};")
-                        for x in mysql_cursor:
-                            print(x)
-                        a = input("[+] Presione ENTER para continuar >> ")
-                            
-                    elif opt4 == "return":
-                        activate3 = False
-                        activate = True
+                        elif nullopt == "deny":
+                            mysql_cursor.execute(f"""
+                                ALTER TABLE {table} ADD COLUMN {refkey} {typedate} NOT NULL;
+                            """)
+                            mysql_cursor.execute(f"""
+                                ALTER TABLE {table} 
+                                ADD FOREIGN KEY ({refkey}) REFERENCES {table}({primarykey})           
+                            """)
+                            print("[+] Creando Relacion: [ # . . . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # . . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # # . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # # # . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando relacion: [ # # # # # ]")
+                            time.sleep(0.2)
+                        
+                            print("[+] RELACION CREADA!!!")
+                        
+                        print("[+] RELACION CREADA!!!")
+                        a = input("[+] Presione ENTER para continuar . . . ")
+                        sele4 = True
+                        while sele4:
+                            activate4 = False
+                            print("""
+------------------------------------
+|    [a] Crear otra relación       |
+|                                  |
+|    [b] Volver al menu principal  |
+------------------------------------                          
+                            """)
+                            opt = input("[+] >> ")
+                            if opt == "a":
+                                activate4 = True
+                                sele4 = False
+                            elif opt == "b":
+                                sele4 = False
+                                activate = True
+                            else:
+                                os.system("clear")
             
-            else:
-                os.sistem("clear")
+                    elif relation == 2:
+                        mysql_cursor.execute("SHOW TABLES;")
+                        for x in mysql_cursor:
+                            print(x)
+                        table1 = input("Primera Tabla (Donde estará la Clave Ajena) >> ")
+                        table2 = input("Segunda Tabla >> ")
+                        key2 = input("Clave primaria de la segunda tabla >> ")
+                        forkey = input("Nombre de la Clave Ajena >> ")
+                        typedate = input("Tipo de dato (INT, CHAR(10), VARCHAR(10), DATE, etc.) >> ")
+                        nullallow = input("Permitir campo vacío (allow o deny) >> ")
+                        if nullallow == "allow":
+                            mysql_cursor.execute(f"""
+                                ALTER TABLE {table1} ADD COLUMN {forkey} {typedate};
+                            """)
+                            mysql_cursor.execute(f"""
+                                ALTER TABLE {table1} 
+                                ADD  CONSTRAINT FK_{table1}_{table2} FOREIGN KEY ({forkey}) REFERENCES {table2}({key2});
+                            """)
+                            
+                            print("[+] Creando Relacion: [ # . . . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # . . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # # . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # # # . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando relacion: [ # # # # # ]")
+                            time.sleep(0.2)
+                            
+                        elif nullallow == "deny":
+                            mysql_cursor.execute(f"""
+                                ALTER TABLE {table1} ADD COLUMN {forkey} {typedate} NOT NULL;
+                            """)
+                            mysql_cursor.execute(f"""
+                                ALTER TABLE {table1} 
+                                ADD CONSTRAINT FK_{table1}_{table2} FOREIGN KEY ({forkey}) REFERENCES {table2}({key2});
+                            """)
+                            
+                            print("[+] Creando Relacion: [ # . . . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # . . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # # . . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando Relacion: [ # # # # . ]")
+                            time.sleep(0.2)
+                            print("[+] Creando relacion: [ # # # # # ]")
+                            time.sleep(0.2)
+                            
+                        print("[+] Relacion creada!!!")
+                        a = input("[+] Presione ENTER para continuar . . . ")
+                    
+                    elif relation == 3:
+                        mysql_cursor.execute("SHOW TABLES;")
+                        for x in mysql_cursor:
+                            print(x)
+                            
+                        table1 = input("[1] Primera Tabla >> ")
+                        pk1 = input("[1] Clave primaria de la primera tabla >> ")
+                        date1 = input("[1] Tipo de dato de la clave primaria >> ")
+                        
+                        table2 = input("[2] Segunda Tabla >> ")
+                        pk2 = input("[2] Clave primaria de la segunda tabla >> ")
+                        date2 = input("[2] Tipo de dato de la clave primaria >> ")
+                        
+                        table3 = input("[3] Tercera Tabla >> ")
+                        pk3 = input("[3] Clave primaria de la tercera tabla >> ")
+                        date3 = input("[3] Tipo de dato de la clave primaria >> ")
+                        
+                        relationtable = input("[+] Nombre de la tabla de la relación")
+                        
+                        mysql_cursor.execute(f"""
+                            CREATE TABLE {relationtable} (
+                                {pk1} {date1} NOT NULL,
+                                {pk2} {date2} NOT NULL,
+                                {pk3} {date3} NOT NULL
+                            );               
+                        """)
+                        mysql_cursor.execute(f"ALTER TABLE {relationtable} ADD PRIMARY KEY ({pk1}, {pk2}, {pk3});")
+                        mysql_cursor.execute(f"ALTER TABLE {relationtable} ADD CONSTRAINT FK_{relationtable}_{table1} FOREIGN KEY ({pk1}) REFERENCES {table1}({pk1});")
+                        mysql_cursor.execute(f"ALTER TABLE {relationtable} ADD CONSTRAINT FK_{relationtable}_{table2} FOREIGN KEY ({pk2}) REFERENCES {table2}({pk2});")
+                        mysql_cursor.execute(f"ALTER TABLE {relationtable} ADD CONSTRAINT FK_{relationtable}_{table3} FOREIGN KEY ({pk3}) REFERENCES {table3}({pk3});")
+                        
+                        print("[+] Creando Relacion: [ # . . . . ]")
+                        time.sleep(0.2)
+                        print("[+] Creando Relacion: [ # # . . . ]")
+                        time.sleep(0.2)
+                        print("[+] Creando Relacion: [ # # # . . ]")
+                        time.sleep(0.2)
+                        print("[+] Creando Relacion: [ # # # # . ]")
+                        time.sleep(0.2)
+                        print("[+] Creando relacion: [ # # # # # ]")
+                        time.sleep(0.2)
+                        print("[+] RELACION CREADA!!!")
+                            
+                                                                                                 
+
