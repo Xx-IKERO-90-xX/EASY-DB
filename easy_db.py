@@ -257,12 +257,12 @@ Si desea cancelar escriba 'cancel'
                         mysql_cursor.execute("SHOW TABLES;")
                         for x in mysql_cursor:
                             print(x)
-                        table1 = input("Primera Tabla (Donde estará la Clave Ajena) >> ")
-                        table2 = input("Segunda Tabla >> ")
-                        key2 = input("Clave primaria de la segunda tabla >> ")
-                        forkey = input("Nombre de la Clave Ajena >> ")
-                        typedate = input("Tipo de dato (INT, CHAR(10), VARCHAR(10), DATE, etc.) >> ")
-                        nullallow = input("Permitir campo vacío (allow o deny) >> ")
+                        table1 = input("[+] Primera Tabla (Donde estará la Clave Ajena) >> ")
+                        table2 = input("[+] Segunda Tabla >> ")
+                        key2 = input("[+] Clave primaria de la segunda tabla >> ")
+                        forkey = input("[+] Nombre de la Clave Ajena >> ")
+                        typedate = input("[+] Tipo de dato (INT, CHAR(10), VARCHAR(10), DATE, etc.) >> ")
+                        nullallow = input("[+] Permitir campo vacío (allow o deny) >> ")
                         if nullallow == "allow":
                             mysql_cursor.execute(f"""
                                 ALTER TABLE {table1} ADD COLUMN {forkey} {typedate};
@@ -323,7 +323,7 @@ Si desea cancelar escriba 'cancel'
                         pk3 = input("[3] Clave primaria de la tercera tabla >> ")
                         date3 = input("[3] Tipo de dato de la clave primaria >> ")
                         
-                        relationtable = input("[+] Nombre de la tabla de la relación")
+                        relationtable = input("[+] Nombre de la tabla de la relación >> ")
                         
                         mysql_cursor.execute(f"""
                             CREATE TABLE {relationtable} (
