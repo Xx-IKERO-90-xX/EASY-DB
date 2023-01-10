@@ -25,7 +25,7 @@ tit = """
 
 os.system("clear")
 print(tit)
-server = input(" Servidor a user (localhost o un servidor en la nube) >> ")
+server = input("[+] Servidor a usar (localhost o un servidor en la nube) >> ")
 user = input("[+] Usuario >> ")
 passwd = input("[+] Contraseña >> ")
 conexion = mysql.connector.connect(
